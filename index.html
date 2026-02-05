@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czy zostaniesz moją Walentynką?</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6e6;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #container {
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 { color: #d63384; }
+
+        .photo {
+            width: 300px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 20px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #yesBtn { background-color: #28a745; color: white; }
+
+        #noBtn {
+            background-color: #dc3545;
+            color: white;
+            position: relative;
+        }
+
+        #messageBox {
+            color: #dc3545;
+            font-weight: bold;
+            height: 24px;
+            margin-top: 10px;
+        }
+
+        .hidden { display: none; }
+
+        #finalScreen h1 { color: #ff0000; font-size: 3rem; }
+
+        /* Styl serduszek */
+        .heart {
+            position: fixed;
+            color: #ff4d4d;
+            font-size: 20px;
+            animation: float 3s linear forwards;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainScreen">
+        <h1>Czy zostaniesz moją walentynką?</h1>
+        <img src="myphoto.jpg" alt="Moje zdjęcie" class="photo">
+        <div id="messageBox"></div>
+        <div class="buttons">
+            <button id="yesBtn">TAK</button>
+            <button id="noBtn">NIE</button>
+        </div>
+    </div>
+
+    <div id="finalScreen" class="hidden">
+        <h1>Zostałaś moją walentynką! ❤️</h1>
+        <img src="finalphoto.jpg" alt="Nasze zdjęcie" class="photo">
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainScreen = document.getElementById('mainScreen');
+        const finalScreen = document.getElementById('finalScreen');
+        const messageBox = document.getElementById('messageBox');
+
+        const messages = ["Nie tym razem", "Jesteś pewna?", "Zastanów się"];
+        let msgIndex = 0;
+        let scale = 1;
+
+        function moveNoButton() {
+            // Losowe pozycje
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+
+            // Zmiana napisu
+            messageBox.innerText = messages[msgIndex];
+            msgIndex = (msgIndex + 1) % messages.length;
+
+            // Powiększanie przycisku TAK
+            scale += 0.3;
+            yesBtn.style.transform = `scale(${scale})`;
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('click', moveNoButton);
+
+        yesBtn.addEventListener('click', () => {
+            mainScreen.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            createHearts();
+        });
+
+        function createHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 5000);
+            }, 150);
+        }
+    </script>
+</body>
+</html>
